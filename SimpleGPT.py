@@ -1,4 +1,6 @@
-import openai
+from openai import OpenAI
+
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 import datetime
 from dotenv import load_dotenv
 import os
@@ -14,7 +16,7 @@ def save_conversation_to_file(conversation, timestamp):
 
 def main():
     load_dotenv()  # Load environment variables from .env file
-    openai.api_key = os.getenv("OPENAI_API_KEY")  # Get API key from environment variable
+      # Get API key from environment variable
 
     print("ChatGPT-4 Command Line Interface")
     print("Type 'quit' to exit and save the conversation.\n")
@@ -30,13 +32,11 @@ def main():
         conversation_history.append(user_input)
 
         try:
-            response = openai.Completion.create(
-                engine="gpt-4-1106-preview",  # You might need to change this depending on the available models
-                prompt="\n".join(conversation_history),
-                max_tokens=150,  # Adjust as needed
-                stop=None,  # You can set stopping criteria here
-                temperature=0.7  # Adjust as needed
-            )
+            response = client.completions.create(engine="gpt-4-1106-preview",  # You might need to change this depending on the available models
+            prompt="\n".join(conversation_history),
+            max_tokens=150,  # Adjust as needed
+            stop=None,  # You can set stopping criteria here
+            temperature=0.7  # Adjust as needed)
 
             chatgpt_response = response.choices[0].text.strip()
             print("ChatGPT:", chatgpt_response)
